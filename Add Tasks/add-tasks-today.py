@@ -117,7 +117,7 @@ def filter_tasks(task_db: dict) -> list[dict]:
     for task in task_db["results"]:
         completion_status = task["properties"]["Status"]["status"]["name"]
         
-        if completion_status != "Done":
+        if completion_status == "Not started":
             pickup_status = task["properties"]["Pickup"]["select"]["name"]
             
             if pickup_status == "1":
