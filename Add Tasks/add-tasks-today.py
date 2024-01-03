@@ -46,17 +46,21 @@ def get_today_pageid_from_journal_db(journal_db: dict) -> str:
 
 # read children blocks properties from page id       
 def read_children_blocks_from_pageid(page_id: str) -> dict:
-    url = f"https://api.notion.com/v1/blocks/{page_id}/children"
+    try:
+        url = f"https://api.notion.com/v1/blocks/{page_id}/children"
 
-    payload = {}
-    headers = {
-    'Notion-Version': '2022-06-28',
-    'Authorization': 'Bearer ' + NOTION_API_TOKEN
-    }
+        payload = {}
+        headers = {
+        'Notion-Version': '2022-06-28',
+        'Authorization': 'Bearer ' + NOTION_API_TOKEN
+        }
 
-    response = requests.request("GET", url, headers=headers, data=payload)
+        response = requests.request("GET", url, headers=headers, data=payload)
 
-    return response.json()
+        return response.json()
+
+    except Exception as e:
+        logging.error(e)
 
 # get today's tasks block id from today's page all blocks
 def get_today_tasks_blockid_from_page_blocks(blocks_data) -> str:   
@@ -69,38 +73,42 @@ def get_today_tasks_blockid_from_page_blocks(blocks_data) -> str:
 
 # add task to today's journal page in today's tasks block
 def add_task_to_today_task_page(block_id, task_string: str) -> int:
-    url = f'https://api.notion.com/v1/blocks/{block_id}/children'
-    
-    headers = {
-        'Authorization': f'Bearer {NOTION_API_TOKEN}',
-        'Content-Type': 'application/json',
-        'Notion-Version': '2022-06-28'
-    }
+    try:
+        url = f'https://api.notion.com/v1/blocks/{block_id}/children'
+        
+        headers = {
+            'Authorization': f'Bearer {NOTION_API_TOKEN}',
+            'Content-Type': 'application/json',
+            'Notion-Version': '2022-06-28'
+        }
 
-    data = {
-        "children": [
-            {
-                "object": "block",
-                "type": "to_do",
-                "to_do": {
-                    "rich_text": [
-                        {
-                            "type": "text",
-                            "text": {
-                                "content": task_string
+        data = {
+            "children": [
+                {
+                    "object": "block",
+                    "type": "to_do",
+                    "to_do": {
+                        "rich_text": [
+                            {
+                                "type": "text",
+                                "text": {
+                                    "content": task_string
+                                }
                             }
-                        }
-                    ],
-                    "checked": False,
-                    "color": "default"
+                        ],
+                        "checked": False,
+                        "color": "default"
+                    }
                 }
-            }
-        ]
-    }
+            ]
+        }
 
-    response = requests.patch(url, headers=headers, json=data)
+        response = requests.patch(url, headers=headers, json=data)
 
-    return response.status_code
+        return response.status_code
+    
+    except Exception as e:
+        logging.error(e)
 
 # filter tasks that are marked for pickup today and status is not done
 def filter_tasks(task_db: dict) -> list[dict]:
