@@ -111,21 +111,46 @@ def add_task_to_today_task_page(block_id, task_string: str) -> int:
         logging.error(e)
 
 # filter tasks that are marked for pickup today and status is not done
-def filter_tasks(task_db: dict) -> list[dict]:
+def filter_tasks(task_db: dict, already_added_tasks: list) -> list[dict]:
     filtered_tasks = []
     
     for task in task_db["results"]:
         completion_status = task["properties"]["Status"]["status"]["name"]
         
-        if completion_status == "Not started":
-            pickup_status = task["properties"]["Pickup"]["select"]["name"]
-            
-            if pickup_status == "1":
-                filtered_tasks.append(task)
+        if completion_status == "In progress":
+                task_string = task["properties"]["Name"]["title"][0]["text"]["content"]
+                if task_string not in already_added_tasks:
+                    filtered_tasks.append(task)
     
     return filtered_tasks
 
+# get already added tasks from today's page
+def get_added_tasks_from_today_page(today_tasks_blockid: str) -> list:
+    try:
+        url = f"https://api.notion.com/v1/blocks/{today_tasks_blockid}/children"
 
+        headers = {
+        'Notion-Version': '2022-06-28',
+        'Authorization': 'Bearer ' + NOTION_API_TOKEN
+        }
+
+        response = requests.request("GET", url, headers=headers)
+
+        response_data = response.json()
+
+        added_tasks = []
+
+        for block in response_data["results"]:
+            if block["type"] == "to_do":
+                added_tasks.append(block["to_do"]["rich_text"][0]["text"]["content"])
+
+        return added_tasks
+
+    except Exception as e:
+        logging.error(e)
+        return []
+
+    
 if __name__ == "__main__":
 
     tasks_db = read_notion_db(TASKS_DB_ID)
@@ -135,7 +160,9 @@ if __name__ == "__main__":
     today_page_blocks = read_children_blocks_from_pageid(today_pageid)
     today_tasks_blockid = get_today_tasks_blockid_from_page_blocks(today_page_blocks)
 
-    filtered_tasks = filter_tasks(tasks_db)
+    already_added_tasks = get_added_tasks_from_today_page(today_tasks_blockid)
+
+    filtered_tasks = filter_tasks(tasks_db, already_added_tasks)
 
     if len(filtered_tasks) > 0:
         for task in filtered_tasks:
