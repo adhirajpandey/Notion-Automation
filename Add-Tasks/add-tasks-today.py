@@ -38,11 +38,14 @@ def read_notion_db(database_id: str) -> dict:
     
 # get today's page id from journal database
 def get_today_pageid_from_journal_db(journal_db: dict) -> str:
-    for page in journal_db["results"]:
-        if page["properties"]["Name"]["title"][0]["mention"]["date"]["start"] == get_current_date():
-            return page["id"]
-        else:
-            return None
+    try:
+        for page in journal_db["results"]:
+            if page["properties"]["Name"]["title"][0]["mention"]["date"]["start"] == get_current_date():
+                return page["id"]
+            else:
+                return None
+    except Exception as e:
+        logging.error(e)
 
 # read children blocks properties from page id       
 def read_children_blocks_from_pageid(page_id: str) -> dict:
@@ -72,10 +75,8 @@ def get_today_tasks_blockid_from_page_blocks(blocks_data) -> str:
         return None
 
 # add task to today's journal page in today's tasks block
-def add_task_to_today_task_page(block_id, task_string: str) -> int:
+def add_tasks_to_today_task_page(block_id, tasks_list: list) -> int:
     try:
-        url = f'https://api.notion.com/v1/blocks/{block_id}/children'
-        
         headers = {
             'Authorization': f'Bearer {NOTION_API_TOKEN}',
             'Content-Type': 'application/json',
@@ -83,8 +84,12 @@ def add_task_to_today_task_page(block_id, task_string: str) -> int:
         }
 
         data = {
-            "children": [
-                {
+            "children": []
+        }
+
+        for task in tasks_list:
+            task_string = task["properties"]["Name"]["title"][0]["text"]["content"]
+            task_payload = {
                     "object": "block",
                     "type": "to_do",
                     "to_do": {
@@ -100,9 +105,10 @@ def add_task_to_today_task_page(block_id, task_string: str) -> int:
                         "color": "default"
                     }
                 }
-            ]
-        }
+            data["children"].append(task_payload)
 
+        url = f'https://api.notion.com/v1/blocks/{block_id}/children'
+        
         response = requests.patch(url, headers=headers, json=data)
 
         return response.status_code
@@ -165,10 +171,8 @@ if __name__ == "__main__":
     filtered_tasks = filter_tasks(tasks_db, already_added_tasks)
 
     if len(filtered_tasks) > 0:
-        for task in filtered_tasks:
-            task_string = task["properties"]["Name"]["title"][0]["text"]["content"]
-            add_task_to_today_task_page(today_tasks_blockid, task_string)
-            print(f"Added task: {task_string}")
+        add_tasks_to_today_task_page(today_tasks_blockid, filtered_tasks)
+        print(f"Added all the filtered tasks to today's page")
     else:
         print("No tasks to add today")
 
