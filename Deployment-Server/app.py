@@ -19,12 +19,12 @@ def ui():
 
 @app.route("/synctasks")
 def trigger_notion_tasks_sync():
-    subprocess.run(["python", f"{PROJECT_DIR}\\Add-Tasks\\add-tasks-today.py"])
+    subprocess.run(["python", f"{PROJECT_DIR}/Add-Tasks/add-tasks-today.py"])
     return redirect(url_for("ui"))
 
 @app.route("/deploymentstatus")
 def trigger_project_deployments_check():
-    subprocess.run(["python", f"{PROJECT_DIR}\\Deployments-Status\\tracker.py"])
+    subprocess.run(["python", f"{PROJECT_DIR}/Deployments-Status/tracker.py"])
     return redirect(url_for("ui"))
 
 
