@@ -24,3 +24,33 @@ Each sub-directory within the repository contains scripts tailored for specific 
 
 🔴NOTE : Please ensure that your notion databases and pages follows the same format/template as given in the demonstration, or make suitable changes in the script to facilitate your use case.
 
+
+## Sample
+
+Tasks_Template
+
+![Screenshot 2024-01-11 230045](https://github.com/adhirajpandey/Notion-Automation/assets/87516052/b9c4a200-daa1-4089-b7d9-6d12ca7a15e3)
+
+
+Journal_Template
+
+![Screenshot 2024-01-11 230605](https://github.com/adhirajpandey/Notion-Automation/assets/87516052/ba15df5c-b772-4ada-ac44-911aa2326623)
+
+
+Deployment_Template
+
+![Screenshot 2024-01-11 233912](https://github.com/adhirajpandey/Notion-Automation/assets/87516052/6e471fdc-aada-4bc9-b4ae-72d958342bd7)
+
+
+Notion-Embedded-UI
+
+![embed](https://github.com/adhirajpandey/Notion-Automation/assets/87516052/f6d6ee93-2eef-44dd-8f30-cde5d948859f)
+
+
+## Miscellaneous
+
+Here are the public links of notion templates used in this project:
+
+1. Tasks_Template:
+2. Journal_Template:
+3. Deployment_Template:
