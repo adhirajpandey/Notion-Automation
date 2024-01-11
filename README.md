@@ -45,12 +45,3 @@ Deployment_Template
 Notion-Embedded-UI
 
 ![embed](https://github.com/adhirajpandey/Notion-Automation/assets/87516052/f6d6ee93-2eef-44dd-8f30-cde5d948859f)
-
-
-## Miscellaneous
-
-Here are the public links of notion templates used in this project:
-
-1. Tasks_Template:
-2. Journal_Template:
-3. Deployment_Template:
