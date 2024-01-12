@@ -2,8 +2,9 @@ import logging
 import os
 import requests
 from dotenv import load_dotenv
-from datetime import date
+import datetime
 import json
+import pytz
 
 load_dotenv()
 
@@ -15,7 +16,12 @@ JOURNAL_DB_ID = os.getenv("JOURNAL_DB_ID")
 
 # get current date in YYYY-MM-DD format
 def get_current_date() -> str:
-    return str(date.today())
+    ist = pytz.timezone('Asia/Calcutta')
+    current_datetime = datetime.datetime.now(ist)
+    
+    formatted_datetime = current_datetime.strftime('%Y-%m-%d')
+
+    return formatted_datetime
 
 # read notion database and return json data1
 def read_notion_db(database_id: str) -> dict:
