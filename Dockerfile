@@ -4,6 +4,6 @@ WORKDIR /app/Deployment-Server
 
 COPY . /app
 
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt 
 
-CMD python3 app.py
+CMD ["sh", "start.sh"]
