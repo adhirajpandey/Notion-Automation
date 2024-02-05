@@ -4,6 +4,11 @@ import os
 import subprocess
 import logging
 
+from kafka import KafkaProducer
+import json
+
+producer = KafkaProducer(bootstrap_servers="localhost:29092")
+KAFKA_TOPIC = "NOTION_TASKS"
 
 def setup_logging():
     logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -23,13 +28,17 @@ def ui():
 @app.route("/synctasks")
 def trigger_notion_tasks_sync():
     logging.info("Sync tasks route accessed.")
-    subprocess.run(["python", f"{PROJECT_DIR}/Add-Tasks/add-tasks-today.py"])
+    data = {"task_type" : "sync_tasks"}
+    producer.send(KAFKA_TOPIC, json.dumps(data).encode("utf-8"))
+    print("Sync Tasks request sent to kafka topic")
     return redirect(url_for("ui"))
 
 @app.route("/deploymentstatus")
 def trigger_project_deployments_check():
     logging.info("Deployment status route accessed.")
-    subprocess.run(["python", f"{PROJECT_DIR}/Deployments-Status/tracker.py"])
+    data = {"task_type" : "deployment_status"}
+    producer.send(KAFKA_TOPIC, json.dumps(data).encode("utf-8"))
+    print("Deployment Status request sent to kafka topic")
     return redirect(url_for("ui"))
 
 
@@ -37,4 +46,3 @@ if __name__ == "__main__":
     setup_logging()
     logging.info("Starting the application.")
     PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    app.run(host='0.0.0.0', port=5000)
