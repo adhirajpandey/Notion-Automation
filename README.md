@@ -18,9 +18,8 @@ Each sub-directory within the repository contains scripts tailored for specific 
 
 1. Clone the project to your local system using: `git clone https://github.com/adhirajpandey/Notion-Automation`.
 2. Rename `.env.example` to `.env` and update the environement variables in script's sub-directories.
-3. Build docker image by running this command: `docker build -t notion_automation .` in project directory.
-4. Run the container using `docker run -d -p 5000:5000 notion_automation`.
-5. Embed the Hosted Flask UI in Notion page/workspace.
+3. Run all docker containers by running this command: `docker compose up` in project directory.
+4. Embed the Hosted Flask UI in Notion page/workspace.
 
 🔴NOTE : Please ensure that your notion databases and pages follows the same format/template as given in the demonstration, or make suitable changes in the script to facilitate your use case.
 
