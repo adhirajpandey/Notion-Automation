@@ -8,7 +8,7 @@ KAFKA_TOPIC = "NOTION_TASKS"
 
 consumer = KafkaConsumer(
     KAFKA_TOPIC, 
-    bootstrap_servers="localhost:29092"
+    bootstrap_servers="kafka:29092"
 )
 
 print("Now consuming")

@@ -7,7 +7,7 @@ import logging
 from kafka import KafkaProducer
 import json
 
-producer = KafkaProducer(bootstrap_servers="localhost:29092")
+producer = KafkaProducer(bootstrap_servers="kafka:29092")
 KAFKA_TOPIC = "NOTION_TASKS"
 
 def setup_logging():
