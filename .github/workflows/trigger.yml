@@ -1,0 +1,17 @@
+name: Trigger Jenkins
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Trigger Jenkins CI/CD Pipeline
+        run: |
+          curl -H "Authorization: Bearer ${{ secrets.JENKINS_TRIGGER_TOKEN }}" ${{ secrets.JENKINS_WEBHOOK_TRIGGER_URL }}
